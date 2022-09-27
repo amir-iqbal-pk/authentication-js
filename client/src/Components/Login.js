@@ -3,6 +3,7 @@ import { padding } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { color } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 const properties = {
     firstName: "",
     secondName: "",
@@ -17,7 +18,7 @@ const Login = () => {
     const [data, setData] = useState(properties)
     const [success, setSuccess] = useState("")
 
-
+    const navigate = useNavigate()
 
     function ValidateEmail(email) {
         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
@@ -29,7 +30,7 @@ const Login = () => {
     }
 
     function ValidatephoneNumber(phoneno) {
-        if ((/^\+(?:[0-9] ?){6,14}[0-9]$/).test(phoneno)) {
+        if ((/([+]?\d{1,2}[.-\s]?)?(\d{3}[.-]?){2}\d{4}/g).test(phoneno)) {
             return true;
         } else {
             alert("Enter Valid Phone Number");
@@ -43,6 +44,7 @@ const Login = () => {
             ValidateEmail(data.email)
             checkPass()
             registerUser()
+            navigate("/")
             setData({
                 firstName: "",
                 secondName: "",
@@ -55,6 +57,7 @@ const Login = () => {
         } else {
             alert("Field Is Missing")
         }
+
     }
 
     const checkPass = () => {
@@ -84,11 +87,9 @@ const Login = () => {
             if (response.status === 200) {
                 setSuccess("User has been registered successfully!")
 
-                setTimeout(() => {
-                    setSuccess("")
-                }, 3000);
+
             }
-            console.log(response);
+
         } catch (error) {
             console.error(error);
         }
@@ -98,7 +99,7 @@ const Login = () => {
     const allUsers = async () => {
         const { data } = await axios.get("http://localhost:5000/getUsers")
 
-        console.log(data);
+
     }
 
 
@@ -136,7 +137,7 @@ const Login = () => {
                                 <TextField type="tel" fullWidth label="Enter your Phone-Number" placeholder="Phone Number" variant="outlined" name="phoneNumber" value={data.phoneNumber} onChange={handleChange}  ></TextField>
                             </Grid>
                             <Grid item>
-                                <TextField type="email" fullWidth label="Enter your email" placeholder="Email Address" variant="outlined" name="email" value={data.email} onChange={handleChange}  ></TextField>
+                                <TextField type="email" fullWidth label="E-mail" placeholder="E-mail Address" variant="outlined" name="email" value={data.email} onChange={handleChange}  ></TextField>
                             </Grid>
 
                             <Grid item>
@@ -148,7 +149,7 @@ const Login = () => {
                             </Grid>
 
                             <Grid item>
-                                <button variant="contained" onClick={checkStates} style={{ backgroundColor: "black", color: "white", padding: '1rem 2rem', width: '100 %', borderRadius: '20px', }}>Submit</button>
+                                <button variant="contained" onClick={checkStates} style={{ backgroundColor: "black", color: "white", padding: '1rem 2rem', width: '100 %', borderRadius: '20px' }}>Register</button>
                             </Grid>
 
                             {success ? success : ""}
